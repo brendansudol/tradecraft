@@ -2,7 +2,7 @@ const fonts = {
   sans:
     'system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", sans-serif',
   serif: "athelas, georgia, serif",
-  monospace: "menlo, consolas, monaco, monospace",
+  monospace: "consolas, monaco, monospace",
 }
 
 export const theme = {
@@ -34,8 +34,8 @@ export const theme = {
   },
   fonts: {
     ...fonts,
-    body: fonts.sans,
-    heading: fonts.sans,
+    body: fonts.monospace,
+    heading: fonts.monospace,
   },
   breakpoints: ["40em", "56em", "64em"],
   fontSizes: [12, 14, 16, 20, 24, 32, 48, 64, 72],
@@ -59,17 +59,11 @@ export const theme = {
       fontWeight: "heading",
       lineHeight: "heading",
     },
-    smDisplay: {
-      variant: "text.heading",
-      fontSize: [2, 3],
-      mb: 2,
-    },
     display: {
       variant: "text.heading",
-      fontSize: [5, 6],
+      fontSize: [4, 5],
       fontWeight: "display",
       letterSpacing: "-0.03em",
-      mt: 3,
     },
     caps: {
       fontFamily: "monospace",
@@ -90,6 +84,10 @@ export const theme = {
       "@media (min-width: 40em)": {
         display: "block",
       },
+    },
+    game: {
+      fontSize: [1, null, 2],
+      fontWeight: "bold",
     },
   },
   buttons: {
@@ -241,6 +239,15 @@ export const theme = {
       borderRadius: 4,
       border: "1px solid",
       borderColor: "muted",
+    },
+    game: {
+      variant: "cards.primary",
+      padding: 2,
+      height: 100,
+      display: "flex",
+      flexDirection: "column",
+      alignItems: "center",
+      justifyContent: "center",
     },
   },
   forms: {
