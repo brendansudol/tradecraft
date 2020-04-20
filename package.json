@@ -7,10 +7,12 @@
     "@testing-library/react": "^9.3.2",
     "@testing-library/user-event": "^7.1.2",
     "@tippyjs/react": "^4.0.0-alpha.4",
+    "firebase": "^7.14.0",
     "lodash-es": "^4.17.15",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "react-icons": "^3.9.0",
+    "react-router-dom": "^5.1.2",
     "react-scripts": "3.4.1",
     "theme-ui": "^0.3.1"
   },
