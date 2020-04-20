@@ -11,7 +11,7 @@ export const Lobby = React.memo(() => {
       {fromInvalidGame && (
         <Alert>Whoops! Invalid game ID. Please try again.</Alert>
       )}
-      <h2>Lobby - stay tuned!</h2>
+      <h2>Lobby - stay tuned!!</h2>
     </Box>
   )
 })
