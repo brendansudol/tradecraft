@@ -243,11 +243,14 @@ export const theme = {
     game: {
       variant: "cards.primary",
       padding: 2,
-      height: 100,
+      height: [60, 100, null],
       display: "flex",
       flexDirection: "column",
       alignItems: "center",
       justifyContent: "center",
+      "&:hover": {
+        cursor: "pointer",
+      },
     },
   },
   forms: {

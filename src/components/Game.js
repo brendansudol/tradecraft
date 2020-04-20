@@ -4,6 +4,7 @@ import { Box, Card, Flex, Grid, Heading, Text } from "theme-ui"
 import { db } from "../utils/db"
 import { generateGame, nextPlayer } from "../utils/game"
 import { Banner } from "./Banner"
+import { Loading } from "./Loading"
 
 export function Game() {
   const [game, setGame] = useState(null)
@@ -11,6 +12,7 @@ export function Game() {
 
   const history = useHistory()
   const { id: gameId } = useParams()
+  const { cards, currentPlayer } = game ?? {}
 
   useEffect(() => {
     // db.update({ [GAME_ID]: newGame() })
@@ -43,13 +45,19 @@ export function Game() {
     })
   }
 
-  const handleClick = async (idx) => {
-    await db.child(`/${gameId}/cards/${idx}`).update({
-      selected: true,
+  const handleClick = (idx) => async () => {
+    const card = cards[idx]
+
+    if (card.selected) return
+
+    const shouldEndTurn = card.label !== currentPlayer
+    await db.child(`/${gameId}`).update({
+      [`/cards/${idx}/selected`]: true,
+      ...(shouldEndTurn && { "/currentPlayer": nextPlayer(currentPlayer) }),
     })
   }
 
-  if (!game) return null
+  if (!game) return <Loading />
 
   return (
     <Box>
@@ -74,25 +82,21 @@ export function Game() {
           {game.cards.map((card, i) =>
             mode === "GUESSER" ? (
               <Card
-                key={i}
+                key={card.word}
                 variant="game"
                 sx={{
                   ...(card.selected && {
-                    bg: BG_COLOR_MAP[card.label],
-                    color: "white",
+                    ...colorMap[card.label],
+                    "&:hover": { cursor: "default" },
                   }),
                 }}
-                onClick={() => handleClick(i)}
+                onClick={handleClick(i)}
               >
                 <Text variant="game">{card.word}</Text>
                 <Text sx={{ fontSize: 10 }}>{card.label}</Text>
               </Card>
             ) : (
-              <Card
-                key={i}
-                variant="game"
-                sx={{ bg: BG_COLOR_MAP[card.label], color: "white" }}
-              >
+              <Card key={card.word} variant="game" sx={colorMap[card.label]}>
                 <Text variant="game">{card.word}</Text>
               </Card>
             )
@@ -117,9 +121,16 @@ export function Game() {
   )
 }
 
-const BG_COLOR_MAP = {
-  RED: "tomato",
-  BLUE: "blue",
-  WHITE: "tan",
-  BLACK: "black",
+const colorMap = {
+  RED: { bg: "#fd5e53", color: "#ffffff" },
+  BLUE: { bg: "#3273dc", color: "#ffffff" },
+  WHITE: { bg: "#f6eec9", color: "#111111" },
+  BLACK: { bg: "#111111", color: "#ffffff" },
 }
+
+// const BG_COLOR_MAP = {
+//   RED: "#FF4136",
+//   BLUE: "#0074D9",
+//   WHITE: "#DDDDDD",
+//   BLACK: "#111111",
+// }
