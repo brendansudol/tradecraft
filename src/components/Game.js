@@ -17,19 +17,13 @@ export function Game() {
   const currentPlayer = game?.currentPlayer
 
   useEffect(() => {
-    // db.update({ [GAME_ID]: newGame() })
-
     db.child(`/${gameId}`).on("value", (snapshot) => {
       const game = snapshot.val()
-
       if (game == null) {
-        return history.push("/", { fromInvalidGame: true })
+        return history.push("/", { invalidGameId: true })
       }
-
-      console.log("game update!", game)
       setGame(game)
     })
-
     // eslint-disable-next-line
   }, [])
 
@@ -75,7 +69,7 @@ export function Game() {
     <Box sx={{ p: [2, 3], mx: "auto", maxWidth: 700 }}>
       <Header animate={Math.floor((score.red + score.blue) / 6)} />
       <Flex
-        mb={2}
+        mb={3}
         sx={{ alignItems: "center", justifyContent: "space-between" }}
       >
         <Flex>

@@ -32,7 +32,7 @@ export const theme = {
     heading: fonts.monospace,
   },
   breakpoints: ["40em", "56em", "64em"],
-  fontSizes: [12, 14, 16, 20, 24, 32, 48, 64, 72],
+  fontSizes: [12, 14, 16, 20, 24, 32, 40, 48, 64],
   fontWeights: {
     body: 400,
     heading: 800,
@@ -91,7 +91,7 @@ export const theme = {
   buttons: {
     primary: {
       color: "background",
-      bg: "text",
+      bg: "primary",
       fontWeight: "bold",
       fontFamily: "body",
       borderRadius: 8,
@@ -241,17 +241,15 @@ export const theme = {
   },
   cards: {
     primary: {
-      padding: 2,
-      textAlign: "center",
+      padding: [3, 4],
       bg: "muted",
       borderRadius: 10,
-      border: "2px solid",
-      borderColor: "transparent",
     },
     game: {
       variant: "cards.primary",
       padding: [1, 2, null],
       height: [60, 100, null],
+      textAlign: "center",
       display: "flex",
       flexDirection: "column",
       alignItems: "center",
@@ -267,7 +265,7 @@ export const theme = {
       fontWeight: "bold",
     },
     input: {
-      fontFamily: "sans",
+      fontFamily: "monospace",
       borderColor: "lightgray",
       borderRadius: 8,
       "&:focus": {
@@ -277,7 +275,7 @@ export const theme = {
       },
     },
     select: {
-      fontFamily: "sans",
+      fontFamily: "monospace",
       borderColor: "lightgray",
       borderRadius: 8,
       "&:focus": {
@@ -287,7 +285,7 @@ export const theme = {
       },
     },
     textarea: {
-      fontFamily: "sans",
+      fontFamily: "monospace",
       borderColor: "lightgray",
       borderRadius: 8,
       "&:focus": {
