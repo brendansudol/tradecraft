@@ -17,20 +17,14 @@ export const theme = {
     gray: "#777777",
     accent: "#660099",
     darken: "rgba(0, 0, 0, .0625)",
-    modes: {
-      dark: {
-        text: "#ffffff",
-        background: "#060606",
-        primary: "#33ccff",
-        secondary: "#ee00ff",
-        muted: "#222",
-        highlight: "#29112c",
-        gray: "#999999",
-        lightgray: "#666",
-        accent: "#cc00ff",
-        darken: "rgba(255, 255, 255, .0625)",
-      },
-    },
+
+    // game colors
+    white: "#ffffff",
+    black: "#111111",
+    red: "#fd5e53",
+    blue: "#3273dc",
+    bystander: "#f6eec9",
+    assassin: "#111111",
   },
   fonts: {
     ...fonts,
@@ -86,16 +80,20 @@ export const theme = {
       },
     },
     game: {
-      fontSize: [1, null, 2],
+      fontSize: [0, 1, 2],
       fontWeight: "bold",
+      width: "100%",
+      whiteSpace: "nowrap",
+      overflow: "hidden",
+      textOverflow: "ellipsis",
     },
   },
   buttons: {
     primary: {
       color: "background",
-      bg: "primary",
+      bg: "text",
       fontWeight: "bold",
-      fontFamily: "sans",
+      fontFamily: "body",
       borderRadius: 8,
       "&:hover": {
         cursor: "pointer",
@@ -114,6 +112,21 @@ export const theme = {
         bg: "primary",
       },
     },
+    small: {
+      variant: "buttons.primary",
+      px: 2,
+      py: 1,
+      fontSize: 12,
+      lineHeight: 1,
+      borderRadius: 8,
+      bg: "transparent",
+      color: "text",
+      border: "1px solid",
+      borderColor: "lightgray",
+      "&:hover, &:focus": {
+        bg: "darken",
+      },
+    },
     icon: {
       width: 24,
       height: 24,
@@ -124,7 +137,7 @@ export const theme = {
         bg: "darken",
       },
     },
-    iconSm: {
+    iconSmall: {
       variant: "buttons.icon",
       width: 20,
       height: 20,
@@ -229,20 +242,15 @@ export const theme = {
   cards: {
     primary: {
       padding: 2,
-      borderRadius: 8,
+      textAlign: "center",
+      bg: "muted",
+      borderRadius: 10,
       border: "2px solid",
       borderColor: "transparent",
-      bg: "muted",
-    },
-    compact: {
-      padding: 1,
-      borderRadius: 4,
-      border: "1px solid",
-      borderColor: "muted",
     },
     game: {
       variant: "cards.primary",
-      padding: 2,
+      padding: [1, 2, null],
       height: [60, 100, null],
       display: "flex",
       flexDirection: "column",
