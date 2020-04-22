@@ -80,7 +80,7 @@ export const theme = {
       },
     },
     game: {
-      fontSize: [0, 1, 2],
+      fontSize: ["10px", 1, 2],
       fontWeight: "bold",
       width: "100%",
       whiteSpace: "nowrap",
@@ -258,7 +258,7 @@ export const theme = {
     game: {
       variant: "cards.primary",
       padding: [1, 2, null],
-      height: [70, 90, null],
+      height: [64, 90, null],
       position: "relative",
       textAlign: "center",
       display: "flex",

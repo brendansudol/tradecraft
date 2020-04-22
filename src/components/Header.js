@@ -11,7 +11,7 @@ export const Header = React.memo(({ showSubtitle }) => {
   }
 
   return (
-    <Box mb={[3, 4]} sx={{ textAlign: "center" }}>
+    <Box mb={["20px", 4]} sx={{ textAlign: "center" }}>
       <Link
         ref={handleTextMorph}
         variant="buttonLink"

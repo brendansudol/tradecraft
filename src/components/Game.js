@@ -99,7 +99,11 @@ export function Game() {
       ) : (
         <Flex
           mb={3}
-          sx={{ alignItems: "flex-end", justifyContent: "space-between" }}
+          sx={{
+            alignItems: "flex-end",
+            justifyContent: "space-between",
+            fontSize: [1, 2],
+          }}
         >
           <Flex>
             <Text mr={1}>Score:</Text>
