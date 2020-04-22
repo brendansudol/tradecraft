@@ -2,7 +2,7 @@ const fonts = {
   sans:
     'system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", sans-serif',
   serif: "athelas, georgia, serif",
-  monospace: "consolas, monaco, monospace",
+  monospace: "courier, consolas, monaco, monospace",
 }
 
 export const theme = {
@@ -114,8 +114,8 @@ export const theme = {
     },
     small: {
       variant: "buttons.primary",
-      px: 2,
-      py: 1,
+      px: "12px",
+      py: "6px",
       fontSize: [0, 1],
       lineHeight: 1,
       borderRadius: 8,
