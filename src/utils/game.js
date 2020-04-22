@@ -8,12 +8,13 @@ export const CARD_TYPE = {
   ASSASSIN: "assassin",
 }
 
-export function generateGame(corpus = WORDS) {
-  const words = sampleSize(corpus, 25)
+export function generateGame({ corpus = WORDS, exclude = [] } = {}) {
+  const availableWords = !exclude.length ? corpus : diff(corpus, exclude)
+  const selectedWords = sampleSize(availableWords, 25)
   const player1 = Math.random() < 0.5 ? CARD_TYPE.RED : CARD_TYPE.BLUE
   const player2 = nextPlayer(player1)
 
-  const cards = words.map((word, i) => {
+  const cards = selectedWords.map((word, i) => {
     let label
     if (i === 0) label = CARD_TYPE.ASSASSIN
     else if (i < 10) label = player1
@@ -30,4 +31,9 @@ export function generateGame(corpus = WORDS) {
 
 export function nextPlayer(current) {
   return current === CARD_TYPE.RED ? CARD_TYPE.BLUE : CARD_TYPE.RED
+}
+
+function diff(a, b) {
+  const bSet = new Set(b)
+  return a.filter((el) => !bSet.has(el))
 }

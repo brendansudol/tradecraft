@@ -7,11 +7,11 @@ import { generateGame } from "../utils/game"
 import { Header } from "./Header"
 
 export const Lobby = React.memo(() => {
+  const [query, setQuery] = useState("")
+
   const history = useHistory()
   const location = useLocation()
   const { invalidGameId } = location.state ?? {}
-
-  const [query, setQuery] = useState("")
 
   const handleSubmit = (e) => {
     e.preventDefault()
@@ -25,7 +25,7 @@ export const Lobby = React.memo(() => {
   }
 
   return (
-    <Box sx={{ p: [2, 3], mx: "auto", maxWidth: 800 }}>
+    <Box sx={{ p: [2, 3], mx: "auto", maxWidth: 750 }}>
       <Header showSubtitle={true} />
       {invalidGameId && (
         <Alert sx={{ display: "block", bg: "text", textAlign: "center" }}>

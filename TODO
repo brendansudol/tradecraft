@@ -1,9 +1,10 @@
-* compute and display score (DONE)
 * compute and display game over
+
+* compute and display score (DONE)
 * add theme-ui buttons (DONE)
-* confirm modals
-* lobby page
-* fun, random ids
-* better loading state
+* lobby page (DONE)
+* fun, random ids (DONE)
 * header animation (DONE)
-* make sure next game has no words from last game
+* favicon (DONE)
+* confirm modals (DONE)
+* make sure next game has no words from last game (DONE)

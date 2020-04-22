@@ -127,6 +127,16 @@ export const theme = {
         bg: "darken",
       },
     },
+    smallDark: {
+      variant: "buttons.small",
+      bg: "text",
+      color: "background",
+      border: "1px solid",
+      borderColor: "transparent",
+      "&:hover, &:focus": {
+        bg: "text",
+      },
+    },
     icon: {
       width: 24,
       height: 24,
@@ -248,7 +258,7 @@ export const theme = {
     game: {
       variant: "cards.primary",
       padding: [1, 2, null],
-      height: [60, 100, null],
+      height: [70, 90, null],
       textAlign: "center",
       display: "flex",
       flexDirection: "column",
