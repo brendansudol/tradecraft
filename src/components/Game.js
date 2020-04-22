@@ -21,13 +21,16 @@ export function Game() {
   const currentPlayer = game?.currentPlayer
 
   useEffect(() => {
-    db.child(`/${gameId}`).on("value", (snapshot) => {
+    function onValue(snapshot) {
       const game = snapshot.val()
-      if (game == null) {
-        return history.push("/", { invalidGameId: true })
-      }
+      if (game == null) return history.push("/", { invalidGameId: true })
       setGame(game)
-    })
+    }
+
+    const ref = db.child(`/${gameId}`)
+    ref.on("value", onValue)
+
+    return () => ref.off("value", onValue)
     // eslint-disable-next-line
   }, [])
 
@@ -69,6 +72,8 @@ export function Game() {
     return { red, blue }
   }, [cards])
 
+  const isSpy = useMemo(() => mode === "SPY", [mode])
+
   if (!game) return <Loading />
 
   return (
@@ -94,40 +99,14 @@ export function Game() {
         </Button>
       </Flex>
       <Grid mb={3} gap={2} columns={5} sx={{ fontSize: [1, 2, 3] }}>
-        {game.cards.map((card, i) =>
-          mode === "GUESSER" ? (
-            <Card
-              key={card.word}
-              variant="game"
-              sx={{
-                ...(card.selected && {
-                  ...getCardColors(card.label),
-                  "&:hover": { cursor: "default" },
-                }),
-              }}
-              onClick={handleClick(i)}
-            >
-              <Text variant="game">{card.word}</Text>
-            </Card>
-          ) : (
-            <Card
-              key={card.word}
-              variant="game"
-              sx={{
-                ...getCardColors(card.label),
-                position: "relative",
-                "&:hover": { cursor: "default" },
-              }}
-            >
-              <Text variant="game">{card.word}</Text>
-              {card.selected && (
-                <Box m={1} sx={{ position: "absolute", top: 0, right: 0 }}>
-                  <CheckIcon size={18} className="icon" />
-                </Box>
-              )}
-            </Card>
-          )
-        )}
+        {game.cards.map((card, i) => (
+          <GameCard
+            key={card.word}
+            card={card}
+            isSpy={isSpy}
+            onClick={isSpy ? undefined : handleClick(i)}
+          />
+        ))}
       </Grid>
       <Flex
         mb={2}
@@ -136,11 +115,7 @@ export function Game() {
         <Box>
           <Button
             variant="small"
-            onClick={
-              mode === "GUESSER"
-                ? () => setIsModeModalOpen(true)
-                : handleToggleMode
-            }
+            onClick={isSpy ? handleToggleMode : () => setIsModeModalOpen(true)}
           >
             Toggle spymaster view
           </Button>
@@ -193,9 +168,29 @@ export function Game() {
   )
 }
 
-function getCardColors(cardType) {
-  return {
-    bg: cardType,
-    color: cardType === CARD_TYPE.BYSTANDER ? "black" : "white",
-  }
-}
+export const GameCard = React.memo(({ card, isSpy, onClick }) => {
+  const { label, selected, word } = card
+  const showLabel = isSpy || selected
+  const showCheck = isSpy && selected
+
+  return (
+    <Card
+      variant="game"
+      onClick={onClick}
+      sx={{
+        ...(showLabel && {
+          bg: label,
+          color: label === CARD_TYPE.BYSTANDER ? "black" : "white",
+          "&:hover": { cursor: "default" },
+        }),
+      }}
+    >
+      <Text variant="game">{word}</Text>
+      {showCheck && (
+        <Box m={1} sx={{ position: "absolute", top: 0, right: 0 }}>
+          <CheckIcon size={18} className="icon" />
+        </Box>
+      )}
+    </Card>
+  )
+})

@@ -259,6 +259,7 @@ export const theme = {
       variant: "cards.primary",
       padding: [1, 2, null],
       height: [70, 90, null],
+      position: "relative",
       textAlign: "center",
       display: "flex",
       flexDirection: "column",
