@@ -18,12 +18,13 @@ export function Game() {
   const { id: gameId } = useParams()
 
   const cards = game?.cards ?? []
-  const currentPlayer = game?.currentPlayer
+  const { currentPlayer, hitAssassin } = game ?? {}
 
   useEffect(() => {
     function onValue(snapshot) {
       const game = snapshot.val()
       if (game == null) return history.push("/", { invalidGameId: true })
+      console.log("update!", game)
       setGame(game)
     }
 
@@ -55,10 +56,13 @@ export function Game() {
 
     if (card.selected) return
 
-    const shouldEndTurn = card.label !== currentPlayer
+    const endTurn = card.label !== currentPlayer
+    const hitAssassin = card.label === CARD_TYPE.ASSASSIN
+
     await db.child(`/${gameId}`).update({
       [`/cards/${idx}/selected`]: true,
-      ...(shouldEndTurn && { "/currentPlayer": nextPlayer(currentPlayer) }),
+      ...(endTurn && { "/currentPlayer": nextPlayer(currentPlayer) }),
+      ...(hitAssassin && { "/hitAssassin": currentPlayer }),
     })
   }
 
@@ -72,6 +76,12 @@ export function Game() {
     return { red, blue }
   }, [cards])
 
+  const winner = useMemo(() => {
+    if (hitAssassin) return nextPlayer(hitAssassin)
+    if (score.red === 0) return CARD_TYPE.RED
+    if (score.blue === 0) return CARD_TYPE.BLUE
+  }, [hitAssassin, score])
+
   const isSpy = useMemo(() => mode === "SPY", [mode])
 
   if (!game) return <Loading />
@@ -79,25 +89,34 @@ export function Game() {
   return (
     <Box sx={{ p: [2, 3], mx: "auto", maxWidth: 750 }}>
       <Header animate={Math.floor((score.red + score.blue) / 6)} />
-      <Flex
-        mb={3}
-        sx={{ alignItems: "center", justifyContent: "space-between" }}
-      >
-        <Flex>
-          <Text mr={1}>Score:</Text>
-          <Text sx={{ color: "red", fontWeight: "bold" }}>{score.red}</Text>
-          <Text mx={1}>-</Text>
-          <Text sx={{ color: "blue", fontWeight: "bold" }}>{score.blue}</Text>
-          <Text mx={2}>/</Text>
-          <Text mr={1}>Turn:</Text>
-          <Text sx={{ color: currentPlayer, fontWeight: "bold" }}>
-            {currentPlayer.toUpperCase()}
-          </Text>
+      {winner ? (
+        <Text
+          mb={3}
+          sx={{ color: winner, fontWeight: "bold", textAlign: "center" }}
+        >
+          {`${winner} team wins!`.toUpperCase()}
+        </Text>
+      ) : (
+        <Flex
+          mb={3}
+          sx={{ alignItems: "center", justifyContent: "space-between" }}
+        >
+          <Flex>
+            <Text mr={1}>Score:</Text>
+            <Text sx={{ color: "red", fontWeight: "bold" }}>{score.red}</Text>
+            <Text mx={1}>-</Text>
+            <Text sx={{ color: "blue", fontWeight: "bold" }}>{score.blue}</Text>
+            <Text mx={2}>/</Text>
+            <Text mr={1}>Turn:</Text>
+            <Text sx={{ color: currentPlayer, fontWeight: "bold" }}>
+              {currentPlayer.toUpperCase()}
+            </Text>
+          </Flex>
+          <Button variant="small" onClick={handleEndTurn}>
+            End turn
+          </Button>
         </Flex>
-        <Button variant="small" onClick={handleEndTurn}>
-          End turn
-        </Button>
-      </Flex>
+      )}
       <Grid mb={3} gap={2} columns={5} sx={{ fontSize: [1, 2, 3] }}>
         {game.cards.map((card, i) => (
           <GameCard
@@ -123,11 +142,12 @@ export function Game() {
             isOpen={isModeModalOpen}
             onClose={() => setIsModeModalOpen(false)}
           >
-            <Box p={1}>
-              <Box mb={2}>Are you the spymaster?</Box>
+            <Box p={2}>
+              <Text variant="heading" mb={3}>
+                Are you the spymaster?
+              </Text>
               <Box>
                 <Button
-                  variant="smallDark"
                   onClick={() => {
                     handleToggleMode()
                     setIsModeModalOpen(false)
@@ -147,17 +167,18 @@ export function Game() {
             isOpen={isRefreshModalOpen}
             onClose={() => setIsRefreshModalOpen(false)}
           >
-            <Box p={1}>
-              <Box mb={2}>Are you sure?</Box>
+            <Box p={2}>
+              <Text variant="heading" mb={3}>
+                Are you sure?
+              </Text>
               <Box>
                 <Button
-                  variant="smallDark"
                   onClick={() => {
                     handleRefresh()
                     setIsRefreshModalOpen(false)
                   }}
                 >
-                  Yes, start a new game
+                  Yes, start new game
                 </Button>
               </Box>
             </Box>

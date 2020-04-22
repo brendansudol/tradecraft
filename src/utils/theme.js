@@ -116,7 +116,7 @@ export const theme = {
       variant: "buttons.primary",
       px: 2,
       py: 1,
-      fontSize: 12,
+      fontSize: [0, 1],
       lineHeight: 1,
       borderRadius: 8,
       bg: "transparent",

@@ -26,6 +26,7 @@ export function generateGame({ corpus = WORDS, exclude = [] } = {}) {
   return {
     cards: shuffle(cards),
     currentPlayer: player1,
+    hitAssassin: false,
   }
 }
 

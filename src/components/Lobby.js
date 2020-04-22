@@ -34,7 +34,7 @@ export const Lobby = React.memo(() => {
       )}
       <Grid pt={3} gap={3} columns={[1, 2, null]}>
         <Card>
-          <Text variant="heading" sx={{ mb: [2, 3], fontSize: [2, 3] }}>
+          <Text variant="heading" sx={{ mb: 3, fontSize: [2, 3] }}>
             Join existing game
           </Text>
           <Box as="form" onSubmit={handleSubmit}>
@@ -56,7 +56,7 @@ export const Lobby = React.memo(() => {
           </Box>
         </Card>
         <Card>
-          <Text variant="heading" sx={{ mb: [2, 3], fontSize: [2, 3] }}>
+          <Text variant="heading" sx={{ mb: 3, fontSize: [2, 3] }}>
             Start new game
           </Text>
           <Button sx={{ width: "100%" }} onClick={handleNewGame}>
