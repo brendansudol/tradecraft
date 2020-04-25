@@ -37,7 +37,7 @@ export const Lobby = React.memo(() => {
           <Text variant="heading" sx={{ mb: 3, fontSize: [2, 3] }}>
             Join existing game
           </Text>
-          <Box as="form" onSubmit={handleSubmit}>
+          <Box mb={3} as="form" onSubmit={handleSubmit}>
             <Flex mx={-1} sx={{ alignItems: "center" }}>
               <Box px={1} sx={{ flex: "1 1 auto" }}>
                 <Input
@@ -54,14 +54,23 @@ export const Lobby = React.memo(() => {
               </Box>
             </Flex>
           </Box>
+          <Text sx={{ fontSize: 1 }}>
+            For example, <strong>fancy-cherry</strong> in{" "}
+            <Text sx={{ textDecoration: "underline" }}>
+              tradecraft.fun/game/fancy-cherry
+            </Text>
+          </Text>
         </Card>
         <Card>
           <Text variant="heading" sx={{ mb: 3, fontSize: [2, 3] }}>
             Start new game
           </Text>
-          <Button sx={{ width: "100%" }} onClick={handleNewGame}>
+          <Button mb={3} sx={{ width: "100%" }} onClick={handleNewGame}>
             Start game
           </Button>
+          <Text sx={{ fontSize: 1 }}>
+            You’ll get a unique link that you can share with friends
+          </Text>
         </Card>
       </Grid>
     </Box>
