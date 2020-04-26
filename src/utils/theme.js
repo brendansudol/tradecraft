@@ -44,8 +44,7 @@ export const theme = {
     heading: 1.25,
   },
   sizes: {
-    sidebar: 256,
-    container: 600,
+    container: 750,
   },
   text: {
     heading: {

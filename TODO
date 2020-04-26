@@ -1,10 +1,7 @@
-* compute and display game over
+TODO:
 
-* compute and display score (DONE)
-* add theme-ui buttons (DONE)
-* lobby page (DONE)
-* fun, random ids (DONE)
-* header animation (DONE)
-* favicon (DONE)
-* confirm modals (DONE)
-* make sure next game has no words from last game (DONE)
+* share game link button
+* add instructions
+* add toast notifications?
+* add footer (DONE)
+* add more details to homepage (DONE)

@@ -6,6 +6,9 @@ import { db } from "../utils/db"
 import { generateGame } from "../utils/game"
 import { Header } from "./Header"
 
+const haikunator = new Haikunator()
+const getRandomId = () => haikunator.haikunate()
+
 export const Lobby = React.memo(() => {
   const [query, setQuery] = useState("")
 
@@ -76,7 +79,3 @@ export const Lobby = React.memo(() => {
     </Box>
   )
 })
-
-const haikunator = new Haikunator()
-
-const getRandomId = () => haikunator.haikunate()
