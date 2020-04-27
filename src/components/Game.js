@@ -21,17 +21,16 @@ export function Game() {
   const { currentPlayer, hitAssassin } = game ?? {}
 
   useEffect(() => {
-    function onValue(snapshot) {
+    function update(snapshot) {
       const game = snapshot.val()
       if (game == null) return history.push("/", { invalidGameId: true })
-      console.log("update!", game)
       setGame(game)
     }
 
     const ref = db.child(`/${gameId}`)
-    ref.on("value", onValue)
+    ref.on("value", update)
 
-    return () => ref.off("value", onValue)
+    return () => ref.off("value", update)
     // eslint-disable-next-line
   }, [])
 
