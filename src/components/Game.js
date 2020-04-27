@@ -35,6 +35,24 @@ export function Game() {
     // eslint-disable-next-line
   }, [])
 
+  const score = useMemo(() => {
+    let [red, blue] = [0, 0]
+    for (const card of cards) {
+      if (card.selected) continue
+      if (card.label === CARD_TYPE.RED) red++
+      else if (card.label === CARD_TYPE.BLUE) blue++
+    }
+    return { red, blue }
+  }, [cards])
+
+  const winner = useMemo(() => {
+    if (hitAssassin) return nextPlayer(hitAssassin)
+    if (score.red === 0) return CARD_TYPE.RED
+    if (score.blue === 0) return CARD_TYPE.BLUE
+  }, [hitAssassin, score])
+
+  const isSpy = useMemo(() => mode === "SPY", [mode])
+
   const handleRefresh = () => {
     const lastWords = cards.map((card) => card.word)
     db.update({ [gameId]: generateGame({ exclude: lastWords }) })
@@ -66,28 +84,10 @@ export function Game() {
     })
   }
 
-  const score = useMemo(() => {
-    let [red, blue] = [0, 0]
-    for (const card of cards) {
-      if (card.selected) continue
-      if (card.label === CARD_TYPE.RED) red++
-      else if (card.label === CARD_TYPE.BLUE) blue++
-    }
-    return { red, blue }
-  }, [cards])
-
-  const winner = useMemo(() => {
-    if (hitAssassin) return nextPlayer(hitAssassin)
-    if (score.red === 0) return CARD_TYPE.RED
-    if (score.blue === 0) return CARD_TYPE.BLUE
-  }, [hitAssassin, score])
-
-  const isSpy = useMemo(() => mode === "SPY", [mode])
-
   if (!game) return <Loading />
 
   return (
-    <Box sx={{ p: [2, 3], mx: "auto", maxWidth: 750 }}>
+    <Box>
       <Header animate={Math.floor((score.red + score.blue) / 6)} />
       {winner ? (
         <Text

@@ -28,7 +28,7 @@ export const Lobby = React.memo(() => {
   }
 
   return (
-    <Box sx={{ p: [2, 3], mx: "auto", maxWidth: 750 }}>
+    <Box>
       <Header showSubtitle={true} />
       {invalidGameId && (
         <Alert sx={{ display: "block", bg: "text", textAlign: "center" }}>
