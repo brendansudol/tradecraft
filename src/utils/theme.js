@@ -113,8 +113,8 @@ export const theme = {
     },
     small: {
       variant: "buttons.primary",
-      px: "12px",
-      py: "6px",
+      px: [2, "12px"],
+      py: [1, "6px"],
       fontSize: [0, 1],
       lineHeight: 1,
       borderRadius: 8,

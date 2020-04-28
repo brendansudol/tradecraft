@@ -7,6 +7,7 @@ import { CARD_TYPE, generateGame, nextPlayer } from "../utils/game"
 import { Header } from "./Header"
 import { Loading } from "./Loading"
 import { Modal } from "./Modal"
+import { ShareButton } from "./ShareButton"
 
 export function Game() {
   const [game, setGame] = useState(null)
@@ -88,22 +89,20 @@ export function Game() {
   return (
     <Box>
       <Header animate={Math.floor((score.red + score.blue) / 6)} />
-      {winner ? (
-        <Text
-          mb={3}
-          sx={{ color: winner, fontWeight: "bold", textAlign: "center" }}
-        >
-          {`${winner} team wins!`.toUpperCase()}
-        </Text>
-      ) : (
-        <Flex
-          mb={3}
-          sx={{
-            alignItems: "flex-end",
-            justifyContent: "space-between",
-            fontSize: [1, 2],
-          }}
-        >
+
+      <Flex
+        mb={3}
+        sx={{
+          alignItems: "flex-end",
+          justifyContent: "space-between",
+          fontSize: [1, 2],
+        }}
+      >
+        {winner ? (
+          <Text sx={{ color: winner, fontWeight: "bold" }}>
+            {`${winner} team wins!`.toUpperCase()}
+          </Text>
+        ) : (
           <Flex>
             <Text mr={1}>Score:</Text>
             <Text sx={{ color: "red", fontWeight: "bold" }}>{score.red}</Text>
@@ -115,11 +114,10 @@ export function Game() {
               {currentPlayer.toUpperCase()}
             </Text>
           </Flex>
-          <Button variant="small" onClick={handleEndTurn}>
-            End turn
-          </Button>
-        </Flex>
-      )}
+        )}
+        <ShareButton />
+      </Flex>
+
       <Grid mb={3} gap={2} columns={5} sx={{ fontSize: [1, 2, 3] }}>
         {game.cards.map((card, i) => (
           <GameCard
@@ -130,63 +128,69 @@ export function Game() {
           />
         ))}
       </Grid>
-      <Flex
-        mb={2}
-        sx={{ alignItems: "center", justifyContent: "space-between" }}
-      >
-        <Box>
-          <Button
-            variant="small"
-            onClick={isSpy ? handleToggleMode : () => setIsModeModalOpen(true)}
-          >
-            Toggle spymaster view
-          </Button>
-          <Modal
-            isOpen={isModeModalOpen}
-            onClose={() => setIsModeModalOpen(false)}
-          >
-            <Box p={2}>
-              <Text variant="heading" mb={3}>
-                Are you the spymaster?
-              </Text>
-              <Box>
-                <Button
-                  onClick={() => {
-                    handleToggleMode()
-                    setIsModeModalOpen(false)
-                  }}
-                >
-                  Yes, proceed
-                </Button>
+
+      <Flex sx={{ alignItems: "center", justifyContent: "space-between" }}>
+        <Button variant="small" onClick={handleEndTurn}>
+          End turn
+        </Button>
+        <Flex sx={{ alignItems: "center" }}>
+          <Box mr={2}>
+            <Button
+              variant="small"
+              onClick={
+                isSpy ? handleToggleMode : () => setIsModeModalOpen(true)
+              }
+            >
+              <Text variant="smScreen">Spymaster</Text>
+              <Text variant="lgScreen">Toggle spymaster</Text>
+            </Button>
+            <Modal
+              isOpen={isModeModalOpen}
+              onClose={() => setIsModeModalOpen(false)}
+            >
+              <Box p={2}>
+                <Text variant="heading" mb={3}>
+                  Are you the spymaster?
+                </Text>
+                <Box>
+                  <Button
+                    onClick={() => {
+                      handleToggleMode()
+                      setIsModeModalOpen(false)
+                    }}
+                  >
+                    Yes, proceed
+                  </Button>
+                </Box>
               </Box>
-            </Box>
-          </Modal>
-        </Box>
-        <Box>
-          <Button variant="small" onClick={() => setIsRefreshModalOpen(true)}>
-            New game
-          </Button>
-          <Modal
-            isOpen={isRefreshModalOpen}
-            onClose={() => setIsRefreshModalOpen(false)}
-          >
-            <Box p={2}>
-              <Text variant="heading" mb={3}>
-                Are you sure?
-              </Text>
-              <Box>
-                <Button
-                  onClick={() => {
-                    handleRefresh()
-                    setIsRefreshModalOpen(false)
-                  }}
-                >
-                  Yes, start new game
-                </Button>
+            </Modal>
+          </Box>
+          <Box>
+            <Button variant="small" onClick={() => setIsRefreshModalOpen(true)}>
+              New game
+            </Button>
+            <Modal
+              isOpen={isRefreshModalOpen}
+              onClose={() => setIsRefreshModalOpen(false)}
+            >
+              <Box p={2}>
+                <Text variant="heading" mb={3}>
+                  Are you sure?
+                </Text>
+                <Box>
+                  <Button
+                    onClick={() => {
+                      handleRefresh()
+                      setIsRefreshModalOpen(false)
+                    }}
+                  >
+                    Yes, start new game
+                  </Button>
+                </Box>
               </Box>
-            </Box>
-          </Modal>
-        </Box>
+            </Modal>
+          </Box>
+        </Flex>
       </Flex>
     </Box>
   )

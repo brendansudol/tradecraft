@@ -7,6 +7,7 @@ import { Lobby } from "./components/Lobby"
 import { Game } from "./components/Game"
 import { theme } from "./utils/theme"
 
+import "tippy.js/dist/tippy.css"
 import "./index.css"
 
 const Root = () => (

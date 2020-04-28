@@ -31,8 +31,15 @@ export const Lobby = React.memo(() => {
     <Box>
       <Header showSubtitle={true} />
       {invalidGameId && (
-        <Alert sx={{ display: "block", bg: "text", textAlign: "center" }}>
-          Whoops! Invalid game ID. Please try again.
+        <Alert
+          sx={{
+            display: "block",
+            bg: "text",
+            fontSize: [0, 1],
+            textAlign: "center",
+          }}
+        >
+          Invalid game ID. Please try again.
         </Alert>
       )}
       <Grid pt={3} gap={3} columns={[1, 2, null]}>

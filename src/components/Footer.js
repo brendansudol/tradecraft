@@ -4,9 +4,9 @@ import { Box, Divider, Link } from "theme-ui"
 
 export const Footer = React.memo(() => {
   return (
-    <Box as="footer" mt={4}>
+    <Box as="footer" mt={[4, 5]}>
       <Divider />
-      <Box mx={-2} sx={{ display: [null, "flex"], alignItems: "baseline" }}>
+      <Box mx={-2} sx={{ display: "flex", alignItems: "baseline" }}>
         <Link variant="buttonLink" sx={{ fontSize: [2, 3] }} as={RRLink} to="/">
           tradecraft
         </Link>
