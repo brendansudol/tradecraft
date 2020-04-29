@@ -8,6 +8,7 @@ import { Header } from "./Header"
 import { Loading } from "./Loading"
 import { Modal } from "./Modal"
 import { ShareButton } from "./ShareButton"
+import { TimerButton } from "./TimerButton"
 
 export function Game() {
   const [game, setGame] = useState(null)
@@ -19,7 +20,7 @@ export function Game() {
   const { id: gameId } = useParams()
 
   const cards = game?.cards ?? []
-  const { currentPlayer, hitAssassin } = game ?? {}
+  const { currentPlayer, hitAssassin, timerStarted } = game ?? {}
 
   useEffect(() => {
     function update(snapshot) {
@@ -63,9 +64,14 @@ export function Game() {
     setMode((prev) => (prev === "GUESSER" ? "SPY" : "GUESSER"))
   }
 
+  const handleStartTimer = async () => {
+    await db.child(`/${gameId}`).update({ timerStarted: Date.now() })
+  }
+
   const handleEndTurn = async () => {
     await db.child(`/${gameId}`).update({
-      currentPlayer: nextPlayer(game.currentPlayer),
+      currentPlayer: nextPlayer(currentPlayer),
+      timerStarted: 0,
     })
   }
 
@@ -78,9 +84,12 @@ export function Game() {
     const hitAssassin = card.label === CARD_TYPE.ASSASSIN
 
     await db.child(`/${gameId}`).update({
-      [`/cards/${idx}/selected`]: true,
-      ...(endTurn && { "/currentPlayer": nextPlayer(currentPlayer) }),
-      ...(hitAssassin && { "/hitAssassin": currentPlayer }),
+      [`cards/${idx}/selected`]: true,
+      ...(hitAssassin && { hitAssassin: currentPlayer }),
+      ...(endTurn && {
+        currentPlayer: nextPlayer(currentPlayer),
+        timerStarted: 0,
+      }),
     })
   }
 
@@ -131,9 +140,10 @@ export function Game() {
 
       <Flex sx={{ alignItems: "center", justifyContent: "space-between" }}>
         <Flex sx={{ alignItems: "center" }}>
-          <Button variant="outline" onClick={handleEndTurn}>
+          <Button mr={2} variant="outline" onClick={handleEndTurn}>
             End turn
           </Button>
+          <TimerButton timerStarted={timerStarted} onClick={handleStartTimer} />
         </Flex>
         <Flex sx={{ alignItems: "center" }}>
           <Box mr={2}>
