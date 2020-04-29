@@ -66,7 +66,7 @@ export const Lobby = React.memo(() => {
           </Box>
           <Text sx={{ fontSize: 1 }}>
             For example, <strong>fancy-cherry</strong> in{" "}
-            <Text sx={{ textDecoration: "underline" }}>
+            <Text sx={{ textDecoration: "underline", wordBreak: "break-all" }}>
               tradecraft.fun/game/fancy-cherry
             </Text>
           </Text>

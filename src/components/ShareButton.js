@@ -22,7 +22,7 @@ export const ShareButton = React.memo(() => {
   return (
     <Box>
       <Tippy interactive={true} visible={isPopoverVisible} content="Copied!">
-        <Button variant="small" onClick={handleClick}>
+        <Button variant="outline" onClick={handleClick}>
           <Text variant="smScreen">Share game</Text>
           <Text variant="lgScreen">Share game link</Text>
         </Button>

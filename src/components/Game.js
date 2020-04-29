@@ -130,13 +130,15 @@ export function Game() {
       </Grid>
 
       <Flex sx={{ alignItems: "center", justifyContent: "space-between" }}>
-        <Button variant="small" onClick={handleEndTurn}>
-          End turn
-        </Button>
+        <Flex sx={{ alignItems: "center" }}>
+          <Button variant="outline" onClick={handleEndTurn}>
+            End turn
+          </Button>
+        </Flex>
         <Flex sx={{ alignItems: "center" }}>
           <Box mr={2}>
             <Button
-              variant="small"
+              variant="outline"
               onClick={
                 isSpy ? handleToggleMode : () => setIsModeModalOpen(true)
               }
@@ -166,7 +168,10 @@ export function Game() {
             </Modal>
           </Box>
           <Box>
-            <Button variant="small" onClick={() => setIsRefreshModalOpen(true)}>
+            <Button
+              variant="outline"
+              onClick={() => setIsRefreshModalOpen(true)}
+            >
               New game
             </Button>
             <Modal

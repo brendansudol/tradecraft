@@ -66,13 +66,11 @@ export const theme = {
       letterSpacing: "0.1em",
     },
     smScreen: {
-      variant: "text.heading",
       "@media (min-width: 40em)": {
         display: "none",
       },
     },
     lgScreen: {
-      variant: "text.heading",
       display: "none",
       "@media (min-width: 40em)": {
         display: "block",
@@ -111,10 +109,11 @@ export const theme = {
         bg: "primary",
       },
     },
-    small: {
+    outline: {
       variant: "buttons.primary",
       px: [2, "12px"],
       py: [1, "6px"],
+      height: ["26px", "30px"],
       fontSize: [0, 1],
       lineHeight: 1,
       borderRadius: 8,
@@ -125,33 +124,6 @@ export const theme = {
       "&:hover, &:focus": {
         bg: "darken",
       },
-    },
-    smallDark: {
-      variant: "buttons.small",
-      bg: "text",
-      color: "background",
-      border: "1px solid",
-      borderColor: "transparent",
-      "&:hover, &:focus": {
-        bg: "text",
-      },
-    },
-    icon: {
-      width: 24,
-      height: 24,
-      p: 0,
-      borderRadius: 8,
-      "&:hover": {
-        cursor: "pointer",
-        bg: "darken",
-      },
-    },
-    iconSmall: {
-      variant: "buttons.icon",
-      width: 20,
-      height: 20,
-      borderRadius: 4,
-      color: "gray",
     },
   },
   links: {
