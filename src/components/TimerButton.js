@@ -3,12 +3,12 @@ import React, { useEffect, useState } from "react"
 import { IoIosAlarm as AlarmIcon } from "react-icons/io"
 import { Box, Button, Text } from "theme-ui"
 
-export const TimerButton = React.memo(({ timerStarted, onClick }) => {
+export const TimerButton = React.memo(({ timerStartedAt, onClick }) => {
   const [time, setTime] = useState(undefined)
   const [isPopoverVisible, setIsPopoverVisible] = useState(false)
 
   useEffect(() => {
-    const secs = getRemainingTime(timerStarted)
+    const secs = getTimeRemaining(timerStartedAt)
     setTime(secs)
     if (secs == null) return
 
@@ -26,7 +26,7 @@ export const TimerButton = React.memo(({ timerStarted, onClick }) => {
     )
 
     return () => clearInterval(interval)
-  }, [timerStarted])
+  }, [timerStartedAt])
 
   useEffect(() => {
     if (isPopoverVisible) {
@@ -56,7 +56,7 @@ export const TimerButton = React.memo(({ timerStarted, onClick }) => {
 
 const TIMER_DURATION_IN_SECS = 100
 
-function getRemainingTime(started) {
+function getTimeRemaining(started) {
   if (started == null || started === 0) return
   const diff = Math.floor((Date.now() - started) / 1000)
   if (diff >= TIMER_DURATION_IN_SECS) return

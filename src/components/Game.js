@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from "react"
+import React, { useEffect, useMemo, useReducer } from "react"
 import { GoCheck as CheckIcon } from "react-icons/go"
 import { useParams, useHistory } from "react-router-dom"
 import { Box, Button, Card, Flex, Grid, Text } from "theme-ui"
@@ -10,31 +10,50 @@ import { Modal } from "./Modal"
 import { ShareButton } from "./ShareButton"
 import { TimerButton } from "./TimerButton"
 
+const initialState = {
+  game: null,
+  isSpy: false,
+  isSpyConfirmOpen: false,
+  isNewGameConfirmOpen: false,
+}
+
+function reducer(state, action) {
+  switch (action.type) {
+    case "UPDATE_GAME":
+      const isNew = state.game?.startedAt !== action.game?.startedAt
+      return {
+        ...state,
+        game: action.game,
+        isSpy: isNew ? false : state.view,
+      }
+    case "TOGGLE_IS_SPY":
+      return {
+        ...state,
+        isSpy: !state.isSpy,
+      }
+    case "SPY_CONFIRM":
+      return {
+        ...state,
+        isSpyConfirmOpen: action.isOpen,
+      }
+    case "NEW_GAME_CONFIRM":
+      return {
+        ...state,
+        isNewGameConfirmOpen: action.isOpen,
+      }
+    default:
+      return state
+  }
+}
+
 export function Game() {
-  const [game, setGame] = useState(null)
-  const [mode, setMode] = useState("GUESSER")
-  const [isModeModalOpen, setIsModeModalOpen] = useState(false)
-  const [isRefreshModalOpen, setIsRefreshModalOpen] = useState(false)
+  const [state, dispatch] = useReducer(reducer, initialState)
+  const { game, isSpy, isSpyConfirmOpen, isNewGameConfirmOpen } = state
+  const { currentPlayer, hitAssassin, timerStartedAt } = game ?? {}
+  const cards = game?.cards ?? []
 
   const history = useHistory()
   const { id: gameId } = useParams()
-
-  const cards = game?.cards ?? []
-  const { currentPlayer, hitAssassin, timerStarted } = game ?? {}
-
-  useEffect(() => {
-    function update(snapshot) {
-      const game = snapshot.val()
-      if (game == null) return history.push("/", { invalidGameId: true })
-      setGame(game)
-    }
-
-    const ref = db.child(`/${gameId}`)
-    ref.on("value", update)
-
-    return () => ref.off("value", update)
-    // eslint-disable-next-line
-  }, [])
 
   const score = useMemo(() => {
     let [red, blue] = [0, 0]
@@ -52,32 +71,34 @@ export function Game() {
     if (score.blue === 0) return CARD_TYPE.BLUE
   }, [hitAssassin, score])
 
-  const isSpy = useMemo(() => mode === "SPY", [mode])
+  useEffect(() => {
+    function update(snapshot) {
+      const game = snapshot.val()
+      if (game == null) return history.push("/", { invalidGameId: true })
+      dispatch({ type: "UPDATE_GAME", game })
+    }
+
+    const ref = db.child(`/${gameId}`)
+    ref.on("value", update)
+
+    return () => ref.off("value", update)
+    // eslint-disable-next-line
+  }, [])
 
   const handleRefresh = () => {
     const lastWords = cards.map((card) => card.word)
     db.update({ [gameId]: generateGame({ exclude: lastWords }) })
-    setMode("GUESSER")
-  }
-
-  const handleToggleMode = () => {
-    setMode((prev) => (prev === "GUESSER" ? "SPY" : "GUESSER"))
-  }
-
-  const handleStartTimer = async () => {
-    await db.child(`/${gameId}`).update({ timerStarted: Date.now() })
   }
 
   const handleEndTurn = async () => {
     await db.child(`/${gameId}`).update({
       currentPlayer: nextPlayer(currentPlayer),
-      timerStarted: 0,
+      timerStartedAt: 0,
     })
   }
 
-  const handleClick = (idx) => async () => {
+  const handleCardClick = (idx) => async () => {
     const card = cards[idx]
-
     if (card.selected) return
 
     const endTurn = card.label !== currentPlayer
@@ -88,9 +109,30 @@ export function Game() {
       ...(hitAssassin && { hitAssassin: currentPlayer }),
       ...(endTurn && {
         currentPlayer: nextPlayer(currentPlayer),
-        timerStarted: 0,
+        timerStartedAt: 0,
       }),
     })
+  }
+
+  const handleStartTimer = async () => {
+    await db.child(`/${gameId}`).update({ timerStartedAt: Date.now() })
+  }
+
+  const toggleIsSpy = () => dispatch({ type: "TOGGLE_IS_SPY" })
+  const setSpyConfirm = (isOpen) => dispatch({ type: "SPY_CONFIRM", isOpen })
+  const openSpyConfirm = () => setSpyConfirm(true)
+  const closeSpyConfirm = () => setSpyConfirm(false)
+  const confirmSpyConfirm = () => {
+    toggleIsSpy()
+    closeSpyConfirm()
+  }
+
+  const setNewGameConfirm = (isOpen) => dispatch({ type: "NEW_GAME_CONFIRM", isOpen })
+  const openNewGameConfirm = () => setNewGameConfirm(true)
+  const closeNewGameConfirm = () => setNewGameConfirm(false)
+  const confirmNewGameConfirm = () => {
+    handleRefresh()
+    closeNewGameConfirm()
   }
 
   if (!game) return <Loading />
@@ -133,7 +175,7 @@ export function Game() {
             key={card.word}
             card={card}
             isSpy={isSpy}
-            onClick={isSpy ? undefined : handleClick(i)}
+            onClick={isSpy ? undefined : handleCardClick(i)}
           />
         ))}
       </Grid>
@@ -143,64 +185,36 @@ export function Game() {
           <Button mr={2} variant="outline" onClick={handleEndTurn}>
             End turn
           </Button>
-          <TimerButton timerStarted={timerStarted} onClick={handleStartTimer} />
+          <TimerButton timerStartedAt={timerStartedAt} onClick={handleStartTimer} />
         </Flex>
         <Flex sx={{ alignItems: "center" }}>
           <Box mr={2}>
-            <Button
-              variant="outline"
-              onClick={
-                isSpy ? handleToggleMode : () => setIsModeModalOpen(true)
-              }
-            >
+            <Button variant="outline" onClick={isSpy ? toggleIsSpy : openSpyConfirm}>
               <Text variant="smScreen">Spymaster</Text>
               <Text variant="lgScreen">Toggle spymaster</Text>
             </Button>
-            <Modal
-              isOpen={isModeModalOpen}
-              onClose={() => setIsModeModalOpen(false)}
-            >
+            <Modal isOpen={isSpyConfirmOpen} onClose={closeSpyConfirm}>
               <Box p={2}>
                 <Text variant="heading" mb={3}>
                   Are you the spymaster?
                 </Text>
                 <Box>
-                  <Button
-                    onClick={() => {
-                      handleToggleMode()
-                      setIsModeModalOpen(false)
-                    }}
-                  >
-                    Yes, proceed
-                  </Button>
+                  <Button onClick={confirmSpyConfirm}>Yes, proceed</Button>
                 </Box>
               </Box>
             </Modal>
           </Box>
           <Box>
-            <Button
-              variant="outline"
-              onClick={() => setIsRefreshModalOpen(true)}
-            >
+            <Button variant="outline" onClick={openNewGameConfirm}>
               New game
             </Button>
-            <Modal
-              isOpen={isRefreshModalOpen}
-              onClose={() => setIsRefreshModalOpen(false)}
-            >
+            <Modal isOpen={isNewGameConfirmOpen} onClose={closeNewGameConfirm}>
               <Box p={2}>
                 <Text variant="heading" mb={3}>
                   Are you sure?
                 </Text>
                 <Box>
-                  <Button
-                    onClick={() => {
-                      handleRefresh()
-                      setIsRefreshModalOpen(false)
-                    }}
-                  >
-                    Yes, start new game
-                  </Button>
+                  <Button onClick={confirmNewGameConfirm}>Yes, start new game</Button>
                 </Box>
               </Box>
             </Modal>
