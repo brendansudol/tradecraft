@@ -24,7 +24,7 @@ function reducer(state, action) {
       return {
         ...state,
         game: action.game,
-        isSpy: isNew ? false : state.view,
+        isSpy: isNew ? false : state.isSpy,
       }
     case "TOGGLE_IS_SPY":
       return {
