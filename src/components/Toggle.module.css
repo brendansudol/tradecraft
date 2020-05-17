@@ -23,10 +23,6 @@
   position: relative;
 }
 
-.toggleInput:checked ~ .toggleLabel::before {
-  background-color: rgba(50, 115, 220, 0.6);
-}
-
 .toggleLabel::before {
   position: absolute;
   top: 0;
@@ -55,6 +51,10 @@
   border-radius: var(--t-radius, 0.75rem);
   transition: transform 0.15s ease-in-out, background-color 0.15s ease-in-out,
     border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+}
+
+.toggleInput:checked ~ .toggleLabel::before {
+  background-color: rgba(50, 115, 220, 0.6);
 }
 
 .toggleInput:checked ~ .toggleLabel::after {
