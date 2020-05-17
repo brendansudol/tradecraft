@@ -1,16 +1,21 @@
 .toggle {
   position: relative;
   display: block;
-  min-height: 1.5rem;
-  padding-left: 2.25rem;
+  min-height: var(--t-height, 1.5rem);
+  padding-left: var(--t-width, 2.5rem);
+
+  --t-width: 2.5rem;
+  --t-height: 1.5rem;
+  --t-radius: 0.75rem;
+  --t-space: 0.25rem;
 }
 
 .toggleInput {
   position: absolute;
   left: 0;
   z-index: -1;
-  width: 1rem;
-  height: 1.25rem;
+  width: 0.5rem;
+  height: 0.5rem;
   opacity: 0;
 }
 
@@ -19,50 +24,48 @@
 }
 
 .toggleInput:checked ~ .toggleLabel::before {
-  background-color: rgba(25, 118, 210, 0.5);
-}
-
-.toggleInput:not(:disabled):active ~ .toggleLabel::before {
-  opacity: 0.75;
+  background-color: rgba(50, 115, 220, 0.6);
 }
 
 .toggleLabel::before {
   position: absolute;
-  top: 0.25rem;
-  left: -2.25rem;
+  top: 0;
+  left: calc(var(--t-width, 2.5rem) * -1);
   display: block;
-  width: 2rem;
-  height: 1rem;
+  width: var(--t-width, 2.5rem);
+  height: var(--t-height, 1.5rem);
   pointer-events: all;
   content: "";
-  background-color: rgba(220, 0, 78, 0.5);
+  background-color: rgba(227, 84, 74, 0.6);
   border: transparent solid 1px;
-  border-radius: 0.5rem;
+  border-radius: var(--t-radius, 0.75rem);
   box-sizing: border-box;
 }
 
 .toggleLabel::after {
   position: absolute;
-  top: calc(0.25rem + 2px);
-  left: calc(-2.25rem + 2px);
+  top: var(--t-space, 0.25rem);
+  left: calc(var(--t-width, 2.5rem) * -1 + var(--t-space, 0.25rem));
   display: block;
-  width: calc(1rem - 4px);
-  height: calc(1rem - 4px);
+  width: calc(var(--t-height, 1.5rem) - var(--t-space, 0.25rem) * 2);
+  height: calc(var(--t-height, 1.5rem) - var(--t-space, 0.25rem) * 2);
   content: "";
   background: no-repeat 50% / 50% 50%;
-  background-color: rgb(220, 0, 78);
-  border-radius: 0.5rem;
-  transition: background-color 0.15s ease-in-out, border-color 0.15s ease-in-out,
-    box-shadow 0.15s ease-in-out, -webkit-transform 0.15s ease-in-out;
+  background-color: rgb(227, 84, 74);
+  border-radius: var(--t-radius, 0.75rem);
   transition: transform 0.15s ease-in-out, background-color 0.15s ease-in-out,
     border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
-  transition: transform 0.15s ease-in-out, background-color 0.15s ease-in-out,
-    border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out,
-    -webkit-transform 0.15s ease-in-out;
 }
 
 .toggleInput:checked ~ .toggleLabel::after {
-  background-color: rgb(25, 118, 210);
-  -webkit-transform: translateX(1rem);
-  transform: translateX(1rem);
+  background-color: rgb(50, 115, 220);
+  transform: translateX(calc(var(--t-width, 2.5rem) - var(--t-height, 1.5rem)));
+}
+
+.toggleInput:disabled ~ .toggleLabel::before {
+  background-color: #e9ecef;
+}
+
+.toggleInput:disabled ~ .toggleLabel::after {
+  background-color: #adb5bd;
 }

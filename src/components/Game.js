@@ -1,3 +1,4 @@
+import Tippy from "@tippyjs/react"
 import React, { useEffect, useMemo, useReducer } from "react"
 import { GoCheck as CheckIcon } from "react-icons/go"
 import { useParams, useHistory } from "react-router-dom"
@@ -9,6 +10,7 @@ import { Loading } from "./Loading"
 import { Modal } from "./Modal"
 import { ShareButton } from "./ShareButton"
 import { TimerButton } from "./TimerButton"
+import { Toggle } from "./Toggle"
 
 const initialState = {
   game: null,
@@ -159,11 +161,6 @@ export function Game() {
             <Text sx={{ color: "red", fontWeight: "bold" }}>{score.red}</Text>
             <Text mx={1}>-</Text>
             <Text sx={{ color: "blue", fontWeight: "bold" }}>{score.blue}</Text>
-            <Text mx={2}>/</Text>
-            <Text mr={1}>Turn:</Text>
-            <Text sx={{ color: currentPlayer, fontWeight: "bold" }}>
-              {currentPlayer.toUpperCase()}
-            </Text>
           </Flex>
         )}
         <ShareButton />
@@ -182,12 +179,25 @@ export function Game() {
 
       <Flex sx={{ alignItems: "center", justifyContent: "space-between" }}>
         <Flex sx={{ alignItems: "center" }}>
-          <Button mr={2} variant="outline" onClick={handleEndTurn}>
+          <Box mr={2}>
+            {winner == null ? (
+              <Tippy content={`Current turn: ${currentPlayer.toUpperCase()}`}>
+                <span>
+                  <Toggle checked={currentPlayer === CARD_TYPE.BLUE} />
+                </span>
+              </Tippy>
+            ) : (
+              <Toggle disabled={true} />
+            )}
+          </Box>
+          <Button variant="outline" onClick={handleEndTurn}>
             End turn
           </Button>
-          <TimerButton timerStartedAt={timerStartedAt} onClick={handleStartTimer} />
         </Flex>
         <Flex sx={{ alignItems: "center" }}>
+          <Box mr={2}>
+            <TimerButton timerStartedAt={timerStartedAt} onClick={handleStartTimer} />
+          </Box>
           <Box mr={2}>
             <Button variant="outline" onClick={isSpy ? toggleIsSpy : openSpyConfirm}>
               <Text variant="smScreen">Spymaster</Text>

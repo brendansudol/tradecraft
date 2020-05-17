@@ -6,18 +6,18 @@ export const Footer = React.memo(() => {
   return (
     <Box as="footer" mt={[4, 5]}>
       <Divider />
-      <Box mx={-2} sx={{ display: "flex", alignItems: "baseline" }}>
+      <Box mx={-2} sx={{ display: [null, "flex"], alignItems: "baseline" }}>
         <Link variant="buttonLink" sx={{ fontSize: [2, 3] }} as={RRLink} to="/">
           tradecraft
         </Link>
         <Box sx={{ mx: "auto" }} />
         <Link
           variant="buttonLink"
-          sx={{ fontSize: 0 }}
+          sx={{ fontSize: 0, fontWeight: "normal" }}
           target="_blank"
           href="https://twitter.com/brensudol"
         >
-          Made by @brensudol
+          Made during the lockdown by <strong>@brensudol</strong>
         </Link>
       </Box>
     </Box>

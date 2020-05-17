@@ -95,6 +95,10 @@ export const theme = {
       "&:hover": {
         cursor: "pointer",
       },
+      "&:focus": {
+        boxShadow: "0 0 0 2px rgba(51, 51, 238, 0.5)",
+        outline: "none",
+      },
     },
     secondary: {
       variant: "buttons.primary",
@@ -123,6 +127,10 @@ export const theme = {
       borderColor: "lightgray",
       "&:hover, &:focus": {
         bg: "darken",
+      },
+      "&:focus": {
+        boxShadow: (t) => `0 0 0 2px ${t.colors.darken}`,
+        outline: "none",
       },
     },
   },
@@ -156,6 +164,10 @@ export const theme = {
       "&:hover, &:focus": {
         textDecoration: "underline",
         borderColor: "darken",
+      },
+      "&:focus": {
+        boxShadow: (t) => `0 0 0 2px ${t.colors.darken}`,
+        outline: "none",
       },
     },
     nav: {
