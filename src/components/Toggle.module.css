@@ -1,13 +1,20 @@
 .toggle {
+  --t-width: 2.25rem;
+  --t-height: 1.25rem;
+  --t-radius: 0.75rem;
+  --t-space: 0.25rem;
+
   position: relative;
   display: block;
   min-height: var(--t-height, 1.5rem);
   padding-left: var(--t-width, 2.5rem);
+}
 
-  --t-width: 2.5rem;
-  --t-height: 1.5rem;
-  --t-radius: 0.75rem;
-  --t-space: 0.25rem;
+@media (min-width: 40em) {
+  .toggle {
+    --t-width: 2.75rem;
+    --t-height: 1.5rem;
+  }
 }
 
 .toggleInput {
