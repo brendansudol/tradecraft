@@ -6,8 +6,8 @@
 
   position: relative;
   display: block;
-  min-height: var(--t-height, 1.5rem);
-  padding-left: var(--t-width, 2.5rem);
+  min-height: var(--t-height);
+  padding-left: var(--t-width);
 }
 
 @media (min-width: 40em) {
@@ -33,31 +33,32 @@
 .toggleLabel::before {
   position: absolute;
   top: 0;
-  left: calc(var(--t-width, 2.5rem) * -1);
+  left: calc(var(--t-width) * -1);
   display: block;
-  width: var(--t-width, 2.5rem);
-  height: var(--t-height, 1.5rem);
+  width: var(--t-width);
+  height: var(--t-height);
   pointer-events: all;
   content: "";
   background-color: rgba(227, 84, 74, 0.6);
   border: transparent solid 1px;
-  border-radius: var(--t-radius, 0.75rem);
+  border-radius: var(--t-radius);
   box-sizing: border-box;
 }
 
 .toggleLabel::after {
   position: absolute;
-  top: var(--t-space, 0.25rem);
-  left: calc(var(--t-width, 2.5rem) * -1 + var(--t-space, 0.25rem));
+  top: var(--t-space);
+  left: calc(var(--t-width) * -1 + var(--t-space));
   display: block;
-  width: calc(var(--t-height, 1.5rem) - var(--t-space, 0.25rem) * 2);
-  height: calc(var(--t-height, 1.5rem) - var(--t-space, 0.25rem) * 2);
+  width: calc(var(--t-height) - var(--t-space) * 2);
+  height: calc(var(--t-height) - var(--t-space) * 2);
   content: "";
   background: no-repeat 50% / 50% 50%;
   background-color: rgb(227, 84, 74);
-  border-radius: var(--t-radius, 0.75rem);
+  border-radius: var(--t-radius);
   transition: transform 0.15s ease-in-out, background-color 0.15s ease-in-out,
-    border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+    border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out,
+    -webkit-transform 0.15s ease-in-out;
 }
 
 .toggleInput:checked ~ .toggleLabel::before {
@@ -66,7 +67,8 @@
 
 .toggleInput:checked ~ .toggleLabel::after {
   background-color: rgb(50, 115, 220);
-  transform: translateX(calc(var(--t-width, 2.5rem) - var(--t-height, 1.5rem)));
+  transform: translateX(calc(var(--t-width) - var(--t-height)));
+  -webkit-transform: translateX(calc(var(--t-width) - var(--t-height)));
 }
 
 .toggleInput:disabled ~ .toggleLabel::before {
