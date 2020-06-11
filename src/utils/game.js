@@ -1,5 +1,5 @@
 import { sampleSize, shuffle } from "lodash-es"
-import { EMOJIS } from "./emojis"
+import { EMOJIS } from "./emojis2"
 import { WORDS } from "./words"
 
 export const CARD_TYPE = {
