@@ -84,6 +84,9 @@ export const theme = {
       overflow: "hidden",
       textOverflow: "ellipsis",
     },
+    emoji: {
+      fontSize: ["28px", "44px"],
+    },
   },
   buttons: {
     primary: {

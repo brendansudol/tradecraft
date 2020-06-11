@@ -5,6 +5,7 @@ import { useParams, useHistory } from "react-router-dom"
 import { Box, Button, Card, Flex, Grid, Text } from "theme-ui"
 import { db } from "../utils/db"
 import { CARD_TYPE, generateGame, nextPlayer } from "../utils/game"
+import { useHash } from "../utils/hooks"
 import { Header } from "./Header"
 import { Loading } from "./Loading"
 import { Modal } from "./Modal"
@@ -51,11 +52,13 @@ function reducer(state, action) {
 export function Game() {
   const [state, dispatch] = useReducer(reducer, initialState)
   const { game, isSpy, isSpyConfirmOpen, isNewGameConfirmOpen } = state
-  const { currentPlayer, hitAssassin, timerStartedAt } = game ?? {}
+  const { currentPlayer, hitAssassin, timerStartedAt, dictionary } = game ?? {}
   const cards = game?.cards ?? []
+  const isEmojiGame = dictionary === "emoji"
 
   const history = useHistory()
   const { id: gameId } = useParams()
+  const hash = useHash()
 
   const score = useMemo(() => {
     let [red, blue] = [0, 0]
@@ -89,7 +92,13 @@ export function Game() {
 
   const handleRefresh = () => {
     const lastWords = cards.map((card) => card.word)
-    db.update({ [gameId]: generateGame({ exclude: lastWords }) })
+
+    db.update({
+      [gameId]: generateGame({
+        exclude: lastWords,
+        useEmojis: hash === "✨",
+      }),
+    })
   }
 
   const handleEndTurn = async () => {
@@ -171,6 +180,7 @@ export function Game() {
           <GameCard
             key={card.word}
             card={card}
+            isEmoji={isEmojiGame}
             isSpy={isSpy}
             onClick={isSpy ? undefined : handleCardClick(i)}
           />
@@ -235,7 +245,7 @@ export function Game() {
   )
 }
 
-export const GameCard = React.memo(({ card, isSpy, onClick }) => {
+export const GameCard = React.memo(({ card, isEmoji, isSpy, onClick }) => {
   const { label, selected, word } = card
   const showLabel = isSpy || selected
   const showCheck = isSpy && selected
@@ -252,7 +262,7 @@ export const GameCard = React.memo(({ card, isSpy, onClick }) => {
         }),
       }}
     >
-      <Text variant="game">{word}</Text>
+      <Text variant={isEmoji ? "emoji" : "game"}>{word}</Text>
       {showCheck && (
         <Box m={1} sx={{ position: "absolute", top: 0, right: 0 }}>
           <CheckIcon size={18} className="icon" />

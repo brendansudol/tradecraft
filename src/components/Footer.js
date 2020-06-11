@@ -17,7 +17,7 @@ export const Footer = React.memo(() => {
           target="_blank"
           href="https://twitter.com/brensudol"
         >
-          Made during the lockdown by <strong>@brensudol</strong>
+          Made by <strong>@brensudol</strong> during the quarantine.
         </Link>
       </Box>
     </Box>

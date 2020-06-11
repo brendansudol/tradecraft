@@ -15,7 +15,7 @@ export const ShareButton = React.memo(() => {
   }, [isPopoverVisible])
 
   const handleClick = () => {
-    copy(window.location.href)
+    copy(decodeURIComponent(window.location.href))
     setIsPopoverVisible(true)
   }
 

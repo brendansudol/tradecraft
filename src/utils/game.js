@@ -1,4 +1,5 @@
 import { sampleSize, shuffle } from "lodash-es"
+import { EMOJIS } from "./emojis"
 import { WORDS } from "./words"
 
 export const CARD_TYPE = {
@@ -8,7 +9,8 @@ export const CARD_TYPE = {
   ASSASSIN: "assassin",
 }
 
-export function generateGame({ corpus = WORDS, exclude = [] } = {}) {
+export function generateGame({ exclude = [], useEmojis = false } = {}) {
+  const corpus = useEmojis ? EMOJIS : WORDS
   const availableWords = !exclude.length ? corpus : diff(corpus, exclude)
   const selectedWords = sampleSize(availableWords, 25)
   const player1 = Math.random() < 0.5 ? CARD_TYPE.RED : CARD_TYPE.BLUE
@@ -29,6 +31,7 @@ export function generateGame({ corpus = WORDS, exclude = [] } = {}) {
     hitAssassin: false,
     startedAt: Date.now(),
     timerStartedAt: 0,
+    dictionary: useEmojis ? "emoji" : "default",
   }
 }
 
