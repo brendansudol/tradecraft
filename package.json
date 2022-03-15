@@ -9,7 +9,7 @@
     "@tippyjs/react": "^4.0.0-alpha.4",
     "firebase": "^7.14.0",
     "haikunator": "^2.1.2",
-    "lodash-es": "^4.17.15",
+    "lodash-es": "^4.17.21",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "react-icons": "^3.9.0",
