@@ -1,7 +1,7 @@
 import React from "react"
 import { Link as RRLink } from "react-router-dom"
 import { Box, Link, Text } from "theme-ui"
-import { morph } from "../utils/morphText"
+import { morph } from "../utils/morph"
 
 const TITLE = "tradecraft"
 

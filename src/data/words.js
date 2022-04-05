@@ -172,7 +172,6 @@ export const WORDS = [
   "HOSPITAL",
   "HOTEL",
   "ICE",
-  "ICE",
   "CREAM",
   "INDIA",
   "IRON",

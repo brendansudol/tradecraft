@@ -41,13 +41,10 @@ export const Modal = React.memo(({ isOpen, onClose, children }) => {
           minWidth: 320,
           maxWidth: 450,
           maxHeight: "90%",
-          overflow: "scroll",
+          overflow: "auto",
         }}
       >
-        <IconButton
-          sx={{ m: 1, position: "absolute", top: 0, right: 0 }}
-          onClick={onClose}
-        >
+        <IconButton sx={{ m: 1, position: "absolute", top: 0, right: 0 }} onClick={onClose}>
           <CloseIcon size={24} />
         </IconButton>
         {children}

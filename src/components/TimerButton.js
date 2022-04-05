@@ -29,10 +29,9 @@ export const TimerButton = React.memo(({ timerStartedAt, onClick }) => {
   }, [timerStartedAt])
 
   useEffect(() => {
-    if (isPopoverVisible) {
-      const timer = setTimeout(() => setIsPopoverVisible(false), 1500)
-      return () => clearTimeout(timer)
-    }
+    if (!isPopoverVisible) return
+    const timer = setTimeout(() => setIsPopoverVisible(false), 1500)
+    return () => clearTimeout(timer)
   }, [isPopoverVisible])
 
   const isRunning = time != null && time > 0
@@ -47,14 +46,14 @@ export const TimerButton = React.memo(({ timerStartedAt, onClick }) => {
           onClick={onClick}
         >
           <AlarmIcon size={16} />
-          {isRunning && <Text ml={1}>{String(time).padStart(3, "0")}</Text>}
+          {isRunning && <Text ml={1}>{String(time).padStart(2, "0")}</Text>}
         </Button>
       </Tippy>
     </Box>
   )
 })
 
-const TIMER_DURATION_IN_SECS = 100
+const TIMER_DURATION_IN_SECS = 60
 
 function getTimeRemaining(started) {
   if (started == null || started === 0) return

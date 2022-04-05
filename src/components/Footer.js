@@ -17,7 +17,15 @@ export const Footer = React.memo(() => {
           target="_blank"
           href="https://twitter.com/brensudol"
         >
-          Made by <strong>@brensudol</strong> during the quarantine.
+          Made by <strong>@brensudol</strong>
+        </Link>
+        <Link
+          variant="buttonLink"
+          sx={{ fontSize: 0, fontWeight: "normal" }}
+          target="_blank"
+          href="https://github.com/brendansudol/tradecraft"
+        >
+          Code on <strong>GitHub</strong>
         </Link>
       </Box>
     </Box>

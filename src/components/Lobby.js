@@ -78,9 +78,7 @@ export const Lobby = React.memo(() => {
           <Button mb={3} sx={{ width: "100%" }} onClick={handleNewGame}>
             Start game
           </Button>
-          <Text sx={{ fontSize: 1 }}>
-            You’ll get a unique link that you can share with friends
-          </Text>
+          <Text sx={{ fontSize: 1 }}>You'll get a unique link that you can share with friends</Text>
         </Card>
       </Grid>
     </Box>

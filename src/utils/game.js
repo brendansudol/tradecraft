@@ -1,6 +1,6 @@
 import { sampleSize, shuffle } from "lodash-es"
-import { EMOJIS } from "./emojis2"
-import { WORDS } from "./words"
+import { EMOJIS } from "../data/emojis"
+import { WORDS } from "../data/words"
 
 export const CARD_TYPE = {
   RED: "red",
@@ -22,6 +22,7 @@ export function generateGame({ exclude = [], useEmojis = false } = {}) {
     else if (i < 10) label = player1
     else if (i < 18) label = player2
     else label = CARD_TYPE.BYSTANDER
+
     return { word, label, selected: false }
   })
 

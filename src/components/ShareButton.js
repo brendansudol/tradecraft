@@ -8,10 +8,9 @@ export const ShareButton = React.memo(() => {
   const [_, copy] = useCopyToClipboard() // eslint-disable-line no-unused-vars
 
   useEffect(() => {
-    if (isPopoverVisible) {
-      const timer = setTimeout(() => setIsPopoverVisible(false), 1000)
-      return () => clearTimeout(timer)
-    }
+    if (!isPopoverVisible) return
+    const timer = setTimeout(() => setIsPopoverVisible(false), 1000)
+    return () => clearTimeout(timer)
   }, [isPopoverVisible])
 
   const handleClick = () => {
