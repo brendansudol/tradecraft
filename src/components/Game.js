@@ -1,4 +1,5 @@
 import Tippy from "@tippyjs/react"
+import { capitalize } from "lodash-es"
 import React, { useEffect, useMemo, useReducer } from "react"
 import { GoCheck as CheckIcon } from "react-icons/go"
 import { useParams, useHistory } from "react-router-dom"
@@ -170,6 +171,10 @@ export function Game() {
             <Text sx={{ color: "red", fontWeight: "bold" }}>{score.red}</Text>
             <Text mx={1}>-</Text>
             <Text sx={{ color: "blue", fontWeight: "bold" }}>{score.blue}</Text>
+            <Text mr={1}>, Turn:</Text>
+            <Text sx={{ color: currentPlayer, fontWeight: "bold" }}>
+              {capitalize(currentPlayer)}
+            </Text>
           </Flex>
         )}
         <ShareButton />
@@ -210,8 +215,7 @@ export function Game() {
           </Box>
           <Box mr={2}>
             <Button variant="outline" onClick={isSpy ? toggleIsSpy : openSpyConfirm}>
-              <Text variant="smScreen">Spymaster</Text>
-              <Text variant="lgScreen">Toggle spymaster</Text>
+              Spymaster
             </Button>
             <Modal isOpen={isSpyConfirmOpen} onClose={closeSpyConfirm}>
               <Box p={2}>
