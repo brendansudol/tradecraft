@@ -82,6 +82,7 @@ export const theme = {
       whiteSpace: "nowrap",
       overflow: "hidden",
       textOverflow: "ellipsis",
+      letterSpacing: "0.5px",
     },
     emoji: {
       fontSize: ["28px", "44px"],
@@ -100,6 +101,10 @@ export const theme = {
       "&:focus": {
         boxShadow: "0 0 0 2px rgba(51, 51, 238, 0.5)",
         outline: "none",
+      },
+      "&:disabled": {
+        opacity: 0.5,
+        cursor: "not-allowed",
       },
     },
     secondary: {
@@ -133,6 +138,9 @@ export const theme = {
       "&:focus": {
         boxShadow: (t) => `0 0 0 2px ${t.colors.darken}`,
         outline: "none",
+      },
+      "&:disabled": {
+        cursor: "not-allowed",
       },
     },
   },

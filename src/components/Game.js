@@ -2,6 +2,7 @@ import Tippy from "@tippyjs/react"
 import { capitalize } from "lodash-es"
 import React, { useEffect, useMemo, useReducer } from "react"
 import { GoCheck as CheckIcon } from "react-icons/go"
+import { IoSparkles as SparklesIcon } from "react-icons/io5"
 import { useParams, useHistory } from "react-router-dom"
 import { Box, Button, Card, Flex, Grid, Text } from "theme-ui"
 import { db } from "../utils/db"
@@ -12,47 +13,10 @@ import { Loading } from "./Loading"
 import { Modal } from "./Modal"
 import { ShareButton } from "./ShareButton"
 import { TimerButton } from "./TimerButton"
-import { Toggle } from "./Toggle"
-
-const initialState = {
-  game: null,
-  isSpy: false,
-  isSpyConfirmOpen: false,
-  isNewGameConfirmOpen: false,
-}
-
-function reducer(state, action) {
-  switch (action.type) {
-    case "UPDATE_GAME":
-      const isNew = state.game?.startedAt !== action.game?.startedAt
-      return {
-        ...state,
-        game: action.game,
-        isSpy: isNew ? false : state.isSpy,
-      }
-    case "TOGGLE_IS_SPY":
-      return {
-        ...state,
-        isSpy: !state.isSpy,
-      }
-    case "SPY_CONFIRM":
-      return {
-        ...state,
-        isSpyConfirmOpen: action.isOpen,
-      }
-    case "NEW_GAME_CONFIRM":
-      return {
-        ...state,
-        isNewGameConfirmOpen: action.isOpen,
-      }
-    default:
-      return state
-  }
-}
 
 export function Game() {
-  const [state, dispatch] = useReducer(reducer, initialState)
-  const { game, isSpy, isSpyConfirmOpen, isNewGameConfirmOpen } = state
+  const [state, dispatch] = useReducer(reducer, INITIAL_STATE)
+  const { game, hint, isSpy, isSpyConfirmOpen, isNewGameConfirmOpen } = state
   const { currentPlayer, hitAssassin, timerStartedAt, dictionary } = game ?? {}
   const cards = game?.cards ?? []
   const isEmojiGame = dictionary === "emoji"
@@ -92,11 +56,9 @@ export function Game() {
   }, [])
 
   const handleRefresh = () => {
-    const lastWords = cards.map((card) => card.word)
-
     db.update({
       [gameId]: generateGame({
-        exclude: lastWords,
+        exclude: cards.map((card) => card.word),
         useEmojis: hash === "✨",
       }),
     })
@@ -109,7 +71,7 @@ export function Game() {
     })
   }
 
-  const handleCardClick = (idx) => async () => {
+  const handleClickCard = (idx) => async () => {
     const card = cards[idx]
     if (card.selected) return
 
@@ -127,24 +89,32 @@ export function Game() {
   }
 
   const handleStartTimer = async () => {
-    await db.child(`/${gameId}`).update({ timerStartedAt: Date.now() })
+    await db.child(`/${gameId}`).update({
+      timerStartedAt: Date.now(),
+    })
   }
 
-  const toggleIsSpy = () => dispatch({ type: "TOGGLE_IS_SPY" })
-  const setSpyConfirm = (isOpen) => dispatch({ type: "SPY_CONFIRM", isOpen })
-  const openSpyConfirm = () => setSpyConfirm(true)
-  const closeSpyConfirm = () => setSpyConfirm(false)
-  const confirmSpyConfirm = () => {
-    toggleIsSpy()
-    closeSpyConfirm()
+  const handleOpenNewGameConfirm = (shouldOpen) => {
+    dispatch({ type: "NEW_GAME", shouldOpen })
   }
 
-  const setNewGameConfirm = (isOpen) => dispatch({ type: "NEW_GAME_CONFIRM", isOpen })
-  const openNewGameConfirm = () => setNewGameConfirm(true)
-  const closeNewGameConfirm = () => setNewGameConfirm(false)
-  const confirmNewGameConfirm = () => {
-    handleRefresh()
-    closeNewGameConfirm()
+  const handleGetHint = async () => {
+    const game = { turn: currentPlayer, board: cards }
+    const setHint = (hint) => dispatch({ type: "UPDATE_HINT", hint })
+
+    try {
+      setHint({ type: "LOADING" })
+      const response = await fetch("https://zigzagzig.vercel.app/api/completion", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ game }),
+      })
+      const data = await response.json()
+      setHint({ type: "LOADED", value: data.result })
+    } catch (error) {
+      console.warn(error)
+      setHint({ type: "FAILED" })
+    }
   }
 
   if (!game) return <Loading />
@@ -187,58 +157,62 @@ export function Game() {
             card={card}
             isEmoji={isEmojiGame}
             isSpy={isSpy}
-            onClick={isSpy ? undefined : handleCardClick(i)}
+            onClick={isSpy ? undefined : handleClickCard(i)}
           />
         ))}
       </Grid>
 
       <Flex sx={{ alignItems: "center", justifyContent: "space-between" }}>
         <Flex sx={{ alignItems: "center" }}>
-          <Box mr={2}>
-            {winner == null ? (
-              <Tippy content={`Current turn: ${currentPlayer.toUpperCase()}`}>
-                <span>
-                  <Toggle checked={currentPlayer === CARD_TYPE.BLUE} />
-                </span>
-              </Tippy>
-            ) : (
-              <Toggle disabled={true} />
-            )}
-          </Box>
           <Button variant="outline" onClick={handleEndTurn}>
             End turn
           </Button>
         </Flex>
-        <Flex sx={{ alignItems: "center" }}>
-          <Box mr={2}>
+        <Flex sx={{ alignItems: "center", gap: 2 }}>
+          <Box>
+            <HintButton hint={hint} onClick={handleGetHint} />
+          </Box>
+          <Box>
             <TimerButton timerStartedAt={timerStartedAt} onClick={handleStartTimer} />
           </Box>
-          <Box mr={2}>
-            <Button variant="outline" onClick={isSpy ? toggleIsSpy : openSpyConfirm}>
+          <Box>
+            <Button variant="outline" onClick={() => dispatch({ type: "SPY_CLICK" })}>
               Spymaster
             </Button>
-            <Modal isOpen={isSpyConfirmOpen} onClose={closeSpyConfirm}>
+            <Modal
+              isOpen={isSpyConfirmOpen}
+              onClose={() => dispatch({ type: "SPY_CONFIRM", value: false })}
+            >
               <Box p={2}>
                 <Text variant="heading" mb={3}>
                   Are you the spymaster?
                 </Text>
                 <Box>
-                  <Button onClick={confirmSpyConfirm}>Yes, proceed</Button>
+                  <Button onClick={() => dispatch({ type: "SPY_CONFIRM", value: true })}>
+                    Yes, proceed
+                  </Button>
                 </Box>
               </Box>
             </Modal>
           </Box>
           <Box>
-            <Button variant="outline" onClick={openNewGameConfirm}>
+            <Button variant="outline" onClick={() => handleOpenNewGameConfirm(true)}>
               New game
             </Button>
-            <Modal isOpen={isNewGameConfirmOpen} onClose={closeNewGameConfirm}>
+            <Modal isOpen={isNewGameConfirmOpen} onClose={() => handleOpenNewGameConfirm(false)}>
               <Box p={2}>
                 <Text variant="heading" mb={3}>
                   Are you sure?
                 </Text>
                 <Box>
-                  <Button onClick={confirmNewGameConfirm}>Yes, start new game</Button>
+                  <Button
+                    onClick={() => {
+                      handleRefresh()
+                      handleOpenNewGameConfirm(false)
+                    }}
+                  >
+                    Yes, start new game
+                  </Button>
                 </Box>
               </Box>
             </Modal>
@@ -275,3 +249,79 @@ export const GameCard = React.memo(({ card, isEmoji, isSpy, onClick }) => {
     </Card>
   )
 })
+
+export const HintButton = React.memo(({ hint, onClick }) => {
+  const isLoading = hint.type === "LOADING"
+  const isReady = hint.type === "FAILED" || hint.type === "LOADED"
+
+  return (
+    <Tippy
+      content={
+        <Box px={1} py={2} sx={{ width: 300, maxHeight: 300 }}>
+          <Text variant="heading" sx={{ mb: 1, fontSize: 2 }}>
+            Need some help?
+          </Text>
+          <Text mb={2}>Get an AI-generated clue suggestion for the current turn.</Text>
+          <Button onClick={onClick} disabled={isLoading}>
+            {isLoading ? "Loading..." : "Get clue"}
+          </Button>
+          {isReady && (
+            <Box sx={{ whiteSpace: "pre-wrap", mt: 2 }}>
+              {hint.value ??
+                "Sorry! There was a problem generating a suggestion. Please try again soon."}
+            </Box>
+          )}
+        </Box>
+      }
+      interactive={true}
+      theme="light"
+      trigger="click"
+    >
+      <Button variant="outline">
+        <SparklesIcon size={16} />
+      </Button>
+    </Tippy>
+  )
+})
+
+const INITIAL_STATE = {
+  game: null,
+  hint: { type: "NOT_STARTED" },
+  isSpy: false,
+  isSpyConfirmOpen: false,
+  isNewGameConfirmOpen: false,
+}
+
+function reducer(state, action) {
+  switch (action.type) {
+    case "UPDATE_GAME":
+      const isNew = state.game?.startedAt !== action.game?.startedAt
+      return {
+        ...state,
+        game: action.game,
+        hint: isNew ? INITIAL_STATE.hint : state.hint,
+        isSpy: isNew ? INITIAL_STATE.isSpy : state.isSpy,
+      }
+    case "UPDATE_HINT":
+      return {
+        ...state,
+        hint: action.hint,
+      }
+    case "NEW_GAME":
+      return {
+        ...state,
+        isNewGameConfirmOpen: action.shouldOpen,
+      }
+    case "SPY_CLICK":
+      if (state.isSpy) return { ...state, isSpy: false }
+      else return { ...state, isSpyConfirmOpen: true }
+    case "SPY_CONFIRM":
+      return {
+        ...state,
+        isSpy: action.value,
+        isSpyConfirmOpen: false,
+      }
+    default:
+      return state
+  }
+}
