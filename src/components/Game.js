@@ -104,7 +104,7 @@ export function Game() {
 
     try {
       setHint({ type: "LOADING" })
-      const response = await fetch("https://zigzagzig.vercel.app/api/completion", {
+      const response = await fetch("https://zigzagzig.vercel.app/api/ai-codenames", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ game }),
